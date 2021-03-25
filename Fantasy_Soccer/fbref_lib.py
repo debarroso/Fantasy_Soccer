@@ -3,7 +3,7 @@
 # File Created: Tuesday, 23rd March 2021 6:33:29 pm
 # Author: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
-# Last Modified: Wednesday, 24th March 2021 11:00:59 pm
+# Last Modified: Thursday, 25th March 2021 6:00:19 pm
 # Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
 #  This script stores methods for returning links from passed in links
@@ -73,7 +73,7 @@ def get_soup(source):
     try:
         page_html = requests.get(source).text
     except:
-        #if the request failed I assume text html was passed in
+        #if the request failed I assume html was passed in as text
         page_html = source
     
     return BeautifulSoup(page_html, features="lxml")
@@ -195,6 +195,7 @@ def parse_stat_table(table):
         row_dict = {}
         columns = row.find_all(["th", "td"])
 
+        #iterate over columns and output to rows
         for column in columns:
             try:
                 link = column.find("a").get("href")
@@ -210,7 +211,7 @@ def parse_stat_table(table):
                     continue
 
             except:
-                pass
+                print("Error parsing column {} in stats table...".format(column))
             
             row_dict[column.get("data-stat")] = column.get_text(strip=True)
 
@@ -359,6 +360,7 @@ def parse_lake_file(file_path):
             table_dict[title].append(df)
 
         except:
+            print("Error {} is not a stats table and could not be parsed...".format(table))
             continue
     
     #if there is no shots table ignore the exception
