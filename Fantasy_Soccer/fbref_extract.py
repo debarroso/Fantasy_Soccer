@@ -3,7 +3,7 @@
 # File Created: Tuesday, 23rd March 2021 6:48:13 pm
 # Author: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
-# Last Modified: Wednesday, 24th March 2021 11:19:00 pm
+# Last Modified: Thursday, 25th March 2021 5:52:12 pm
 # Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
 # Description:
@@ -11,6 +11,7 @@
 ##########################################################################################
 
 
+import datetime as dt
 import fbref_lib as fb
 
 
@@ -52,8 +53,43 @@ def full_historical_extract():
                 fb.save_match_file(match, year, league)
 
 
-def daily_extract():
-    pass
+"""
+Performs a daily extract for dates within passed in lookback period from yesterday.
+Will overwrite existing files with new requests
+Parameters:
+    lookback_days - number of days to lookback from yesterday (default is 7)
+"""
+def daily_extract(lookback_days=7):
+
+    #grab league dict object and notable dates
+    league_dict = fb.get_league_dict()
+    yesterday = dt.date.today() - dt.timedelta(days=1)
+    begin_date = yesterday - dt.timedelta(days=lookback_days)
+
+    #increment begin_date by 1 in this loop until it equals yesterday
+    while begin_date <= yesterday:
+
+        #get soup object and table tags
+        soup = fb.get_soup("{}/en/matches/{}".format(fb.get_homepage(), begin_date))
+        tables = soup.find_all("table")
+
+        for table in tables:
+
+            #the table caption should tell us which league this is
+            caption = table.find("caption").find("a")
+
+            #find the league in the dict and save matches to file
+            for league in league_dict:
+
+                #this league is in the league_dict
+                if "/en/comps/{}/".format(league_dict[league]["id"]) in str(caption):
+                    matches = fb.get_match_reports(str(table))
+                    
+                    for match in matches:
+                        fb.save_match_file(match, league_dict[league]["current_season"], league)
+
+        begin_date = begin_date + dt.timedelta(days=1)
+
 
 def ad_hoc_extract():
     pass
