@@ -3,7 +3,7 @@
 # File Created: Tuesday, 23rd March 2021 6:33:29 pm
 # Author: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
-# Last Modified: Wednesday, 24th March 2021 8:39:42 pm
+# Last Modified: Wednesday, 24th March 2021 11:00:59 pm
 # Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
 #  This script stores methods for returning links from passed in links
@@ -115,6 +115,25 @@ def get_match_reports(link):
     match_links = list(set(match_links))
 
     return match_links
+
+
+"""
+Save a match report in the directory
+Parameters:
+    link - url suffix of match report (does not include homepage)
+    year - the year corresponding to the bucket in the directory
+    league - the league competition this match was played in
+"""
+def save_match_file(link, year, league):
+    
+    #get html request and store file name
+    page_text = requests.get(get_homepage() + link).text
+    file_name = link.replace("/", "_")[1:] + ".txt"
+
+    #write request to file
+    fp = open("{}Seasons\\{}\\FBref_Match_HTMLs\\{}\\{}".format(get_directory(), year, league, file_name), "w", encoding="utf-8")
+    fp.write(page_text)
+    fp.close()    
 
 
 """
