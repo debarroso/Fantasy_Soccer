@@ -3,7 +3,7 @@
 # File Created: Tuesday, 23rd March 2021 6:33:29 pm
 # Author: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
-# Last Modified: Thursday, 25th March 2021 6:00:19 pm
+# Last Modified: Friday, 26th March 2021 11:18:41 am
 # Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
 #  This script stores methods for returning links from passed in links
@@ -30,6 +30,49 @@ Returns the directory of this file
 def get_directory():
 
     return "{}\\".format(os.path.dirname(__file__))
+
+
+"""
+Method for building the file structure making up the "data lake" and config
+fbref_links file if they do not exist
+"""
+def build_directories():
+
+    leagues = get_league_dict()
+    
+    if not os.path.exists(get_directory() + "Seasons"):
+        os.makedirs(get_directory() + "Seasons")
+
+    for league in leagues:
+
+        #set to earliest year in this db history
+        year = 2017
+
+        while year <= leagues[league]["current_season"]:
+
+            if not os.path.exists(get_directory() + "Seasons\\{}".format(year)):
+                os.makedirs(get_directory() + "Seasons\\{}".format(year))
+
+            if not os.path.exists(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs".format(year)):
+                os.makedirs(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs".format(year))
+
+            if not os.path.exists(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs\\{}".format(year, league)):
+                os.makedirs(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs\\{}".format(year, league))
+
+            year += 1
+
+    if not os.path.exists(get_directory() + "fbref_links.json"):
+        sample_dict = {
+            "***Substitute with League Name Key***": {
+                "id": "***Go to https://fbref.com/en/comps/ and see what number comes next when you hover over hyperlinks***",
+                "current_season": "***Beginning year of the most current season (for now updated manually)***",
+                "link": "***The competition link to the season history if you were to click on it at https://fbref.com/en/comps/***"
+            }
+        }
+
+        with open(get_directory() + "fbref_links.json", "w") as fp:
+            fp.write(json.dumps(sample_dict, indent=4))
+
 
 
 """
