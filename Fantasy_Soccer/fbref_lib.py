@@ -3,7 +3,7 @@
 # File Created: Tuesday, 23rd March 2021 6:33:29 pm
 # Author: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
-# Last Modified: Friday, 26th March 2021 11:18:41 am
+# Last Modified: Saturday, 27th March 2021 5:23:39 pm
 # Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
 #  This script stores methods for returning links from passed in links
@@ -38,6 +38,8 @@ fbref_links file if they do not exist
 """
 def build_directories():
 
+    build_sample_config()
+
     leagues = get_league_dict()
     
     if not os.path.exists(get_directory() + "Seasons"):
@@ -61,6 +63,10 @@ def build_directories():
 
             year += 1
 
+"""
+Builds an example config file
+"""
+def build_sample_config():
     if not os.path.exists(get_directory() + "fbref_links.json"):
         sample_dict = {
             "***Substitute with League Name Key***": {
@@ -180,38 +186,36 @@ def save_match_file(link, year, league):
 
 
 """
-Returns the links to the matches played for the given match date
+Returns the links to the matches played in selected competitions
+(stored in fbref_links.json) for the given match date
 Parameters:
     link - url link to the match date web page
 """
 def get_matchday_matches(link):
+
+    #get league dict object for active leagues
+    league_dict = get_league_dict()
     
-    #get soup object from matchday webpage
+    #get soup object and table tags
     soup = get_soup(link)
-    matches = soup.find_all("table")
+    tables = soup.find_all("table")
+    
+    #initialize list to store match links
+    matches = {}
 
-    #grab leagues that had games on this matchday
-    leagues = get_league_dict()
-    league_matches = {}
+    for table in tables:
 
-    for match in matches:
+        #the table caption should tell us which league this is
+        caption = table.find("caption").find("a")
 
-        #get soup object for html within this table tag
-        soup = get_soup(str(match))
-        league_link = str(soup.find("caption").find("a"))
+        #find the league in the dict and save matches to file
+        for league in league_dict:
 
-        for key in leagues:
+            #this league is in the league_dict
+            if "/en/comps/{}/".format(league_dict[league]["id"]) in str(caption):
+                matches[league] = get_match_reports(str(table))
 
-            #for each league, iterate over matches on this matchday and push to return dict
-            if "comps/{}/".format(leagues[key]["id"]) in league_link:
-                
-                links = soup.find_all("a")
-                match_links = [str(link).split("\"")[1] for link in links if "matches" in str(link) and "Match Report" in str(link)]
-                match_links = list(set(match_links))
-                
-                league_matches[key] = match_links
-
-    return league_matches
+    return matches
 
 
 """

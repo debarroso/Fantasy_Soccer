@@ -1,13 +1,4 @@
-/*
- * File: .gitignore
- * File Created: Wednesday, 24th March 2021 7:21:20 pm
- * Author: Oliver DeBarros (debarros.oliver@gmail.com)
- * -----
- * Last Modified: Wednesday, 24th March 2021 9:14:24 pm
- * Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
- * -----
- * Description:
- */
-
+#things to ignore in this repo
 Fantasy_Soccer/fbref_links.json
-Fantasy_Soccer/__pycache__/fbref_lib.cpython-38.pyc
+Fantasy_Soccer/__pycache__/
+Fantasy_Soccer/Seasons/
