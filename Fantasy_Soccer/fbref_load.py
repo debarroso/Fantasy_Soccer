@@ -1,16 +1,12 @@
 ##########################################################################################
-# File: fbref_transform.py
-# File Created: Tuesday, 23rd March 2021 6:37:32 pm
+# File: fbref_load.py
+# File Created: Saturday, 22nd May 2021 12:24:03 pm
 # Author: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
-# Last Modified: Saturday, 22nd May 2021 2:32:28 pm
+# Last Modified: Saturday, 22nd May 2021 5:01:39 pm
 # Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
 # Description:
-#   Stores methods related to transforming data loaded from the data lake
 ##########################################################################################
 
-
 import fbref_lib as fb
-import pandas as pd
-

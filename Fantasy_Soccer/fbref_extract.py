@@ -3,7 +3,7 @@
 # File Created: Tuesday, 23rd March 2021 6:48:13 pm
 # Author: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
-# Last Modified: Saturday, 27th March 2021 5:24:10 pm
+# Last Modified: Saturday, 22nd May 2021 12:21:58 pm
 # Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
 # Description:
@@ -19,7 +19,7 @@ import fbref_lib as fb
 Performs a historical load for the selected leagues from fbref.com
 as far back as 2017 as that is when the site updated their statistics tables
 """
-def full_historical_extract():
+def full_match_historical_extract():
 
     #get leagues dict and iterate over keys
     leagues = fb.get_league_dict()
@@ -59,7 +59,7 @@ Will overwrite existing files with new requests
 Parameters:
     lookback_days - number of days to lookback from yesterday (default is 7)
 """
-def daily_extract(lookback_days=7):
+def daily_match_extract(lookback_days=7):
 
     #grab league dict object and notable dates
     league_dict = fb.get_league_dict()
@@ -81,12 +81,12 @@ def daily_extract(lookback_days=7):
 
 
 """
-Pulls extracts for a passed in range of dates (only supports a single season)
+Pulls match extracts for a passed in range of dates (only supports a single season)
 Parameters:
     dates - list of dates to iterate over and perform extracts
     season - determines which season to save the data
 """
-def ad_hoc_extract(dates, season):
+def ad_hoc_match_extract(dates, season):
     
     #iterate over dates
     for date in dates:
@@ -98,3 +98,6 @@ def ad_hoc_extract(dates, season):
         for league in matches:
             for match in matches[league]:
                 fb.save_match_file(match, season, league)
+
+
+daily_match_extract(21)
