@@ -4,7 +4,7 @@
 # Author: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
 # Last Modified: Saturday, 22nd May 2021 5:01:07 pm
-# Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
+# Modified By: Oliver DeBarros
 # -----
 #  This script stores methods for returning links from passed in links
 ##########################################################################################
@@ -66,6 +66,12 @@ def build_directories():
 
             if not os.path.exists(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs\\{}".format(year, league)):
                 os.makedirs(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs\\{}".format(year, league))
+
+            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire".format(year)):
+                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire".format(year))
+
+            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire\\{}".format(year, league)):
+                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire\\{}".format(year, league))
 
             year += 1
 
@@ -592,3 +598,5 @@ def shuffled_sample(in_list, out_size, seed=1):
     random.Random(seed).shuffle(in_list)
 
     return in_list[:out_size]
+
+build_directories()
