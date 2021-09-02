@@ -73,6 +73,15 @@ def build_directories():
             if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire\\{}".format(year, league)):
                 os.makedirs(get_directory() + "Seasons\\{}\\Rotowire\\{}".format(year, league))
 
+            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Players".format(year, league)):
+                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Players".format(year, league))
+
+            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Teams".format(year, league)):
+                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Teams".format(year, league))
+
+            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Defense".format(year, league)):
+                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Defense".format(year, league))
+
             year += 1
 
 """
@@ -598,5 +607,3 @@ def shuffled_sample(in_list, out_size, seed=1):
     random.Random(seed).shuffle(in_list)
 
     return in_list[:out_size]
-
-build_directories()
