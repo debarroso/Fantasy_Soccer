@@ -142,7 +142,7 @@ def get_soup(source):
     #in case this is a url, try a request first
     try:
         page_html = requests.get(source).text
-    except:
+    except Exception:
         #if the request failed I assume html was passed in as text
         page_html = source
     
@@ -257,7 +257,7 @@ def parse_stat_table(table):
         try:
             if "spacer" in row.get("class"):
                 continue
-        except:
+        except Exception:
             pass
 
         row_dict = {}
@@ -278,7 +278,7 @@ def parse_stat_table(table):
                     row_dict["nationality"] = link.split('/')[-2]
                     continue
 
-            except:
+            except Exception:
                 pass
             
             row_dict[column.get("data-stat")] = column.get_text(strip=True)
@@ -367,7 +367,7 @@ def get_match_metadata(text):
         #not every match has this statistic, if it doesn't just set to none type
         try:
             metadata[f"{team}_xg"] = float(teams[team].find("div", {"class": "score_xg"}).get_text())
-        except:
+        except Exception:
             metadata[f"{team}_xg"] = None
 
         #if the record string doesn't match this pattern it wasn't there
@@ -495,14 +495,14 @@ def parse_lake_match_file(file_path):
         
             table_dict[title].append(df)
 
-        except:
+        except Exception:
             continue
     
     #if there is no shots table ignore the exception, also there are three
     #tables returned and we only care about the first (combined)
     try:
         table_dict["Shots Table"] = table_dict["Shots Table"][0]
-    except:
+    except Exception:
         pass
     
     return table_dict
@@ -574,7 +574,7 @@ def append_lake_file(file_path):
 
         try:
             tables[table].to_csv(f"{get_directory()}\\Testing\\{table_name}.csv", index=False, mode="a", header=False)
-        except:
+        except Exception:
             df = full_lateral_df_join(tables[table])
             df.to_csv(f"{get_directory()}\\Testing\\{table_name}.csv", index=False, mode="a", header=False)
 
