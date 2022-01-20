@@ -25,11 +25,11 @@ def get_homepage():
 
 
 """
-Returns the directory of this file
+Returns the directory of this file as a string
 """
 def get_directory():
 
-    return "{}\\".format(os.path.dirname(__file__))
+    return f"{os.path.dirname(__file__)}\\"
 
 
 """
@@ -58,29 +58,29 @@ def build_directories():
 
         while year <= leagues[league]["current_season"]:
 
-            if not os.path.exists(get_directory() + "Seasons\\{}".format(year)):
-                os.makedirs(get_directory() + "Seasons\\{}".format(year))
+            if not os.path.exists(get_directory() + f"Seasons\\{year}"):
+                os.makedirs(get_directory() + f"Seasons\\{year}")
 
-            if not os.path.exists(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs".format(year)):
-                os.makedirs(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs".format(year))
+            if not os.path.exists(get_directory() + f"Seasons\\{year}\\FBref_Match_HTMLs"):
+                os.makedirs(get_directory() + f"Seasons\\{year}\\FBref_Match_HTMLs")
 
-            if not os.path.exists(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs\\{}".format(year, league)):
-                os.makedirs(get_directory() + "Seasons\\{}\\FBref_Match_HTMLs\\{}".format(year, league))
+            if not os.path.exists(get_directory() + f"Seasons\\{year}\\FBref_Match_HTMLs\\{league}"):
+                os.makedirs(get_directory() + f"Seasons\\{year}\\FBref_Match_HTMLs\\{league}")
 
-            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire".format(year)):
-                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire".format(year))
+            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire"):
+                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire")
 
-            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire\\{}".format(year, league)):
-                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire\\{}".format(year, league))
+            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}"):
+                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}")
 
-            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Players".format(year, league)):
-                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Players".format(year, league))
+            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Players"):
+                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Players")
 
-            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Teams".format(year, league)):
-                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Teams".format(year, league))
+            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Teams"):
+                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Teams")
 
-            if not os.path.exists(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Defense".format(year, league)):
-                os.makedirs(get_directory() + "Seasons\\{}\\Rotowire\\{}\\Defense".format(year, league))
+            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Defense"):
+                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Defense")
 
             year += 1
 
@@ -128,7 +128,7 @@ def stats_url_to_fixtures(season_stats_url):
     
     split_url = season_stats_url.split("/")
     
-    return "{}/schedule/{}".format("/".join(split_url[:-1]), split_url[-1].replace("Stats", "Scores-and-Fixtures"))
+    return f"{'/'.join(split_url[:-1])}/schedule/{split_url[-1].replace('Stats', 'Scores-and-Fixtures')}"
 
 
 
@@ -201,7 +201,7 @@ def save_match_file(link, year, league):
     file_name = link.replace("/", "_")[1:] + ".txt"
 
     #write request to file
-    fp = open("{}Seasons\\{}\\FBref_Match_HTMLs\\{}\\{}".format(get_directory(), year, league, file_name), "w", encoding="utf-8")
+    fp = open(f"{get_directory()}Seasons\\{year}\\FBref_Match_HTMLs\\{league}\\{file_name}", "w", encoding="utf-8")
     fp.write(page_text)
     fp.close()    
 
@@ -233,7 +233,7 @@ def get_matchday_matches(link):
         for league in league_dict:
 
             #this league is in the league_dict
-            if "/en/comps/{}/".format(league_dict[league]["id"]) in str(caption):
+            if f"/en/comps/{league_dict[league]['id']}/" in str(caption):
                 matches[league] = get_match_reports(str(table))
 
     return matches
@@ -270,7 +270,7 @@ def parse_stat_table(table):
 
                 #save if this is a player link
                 if "players" in link:
-                    row_dict["{}_link".format(column.get("data-stat"))] = link
+                    row_dict[f"{column.get('data-stat')}_link"] = link
 
                 #save player country link
                 elif "country" in link:
@@ -358,22 +358,22 @@ def get_match_metadata(text):
     #get team specific metadata
     for team in teams:
         
-        metadata["{}_team".format(team)] = teams[team].find("a").get_text()
-        metadata["{}_team_link".format(team)] = teams[team].find("a").get("href")
-        metadata["{}_record".format(team)] = teams[team].find_all("div")[5].get_text()
-        metadata["{}_score".format(team)] = int(teams[team].find("div", {"class": "score"}).get_text())
-        metadata["{}_manager".format(team)] = teams[team].find("div", {"class": "datapoint"}).get_text().replace("Manager: ", "").replace(u"\xa0", u" ")
+        metadata[f"{team}_team"] = teams[team].find("a").get_text()
+        metadata[f"{team}_team_link"] = teams[team].find("a").get("href")
+        metadata[f"{team}_record"] = teams[team].find_all("div")[5].get_text()
+        metadata[f"{team}_score"] = int(teams[team].find("div", {"class": "score"}).get_text())
+        metadata[f"{team}_manager"] = teams[team].find("div", {"class": "datapoint"}).get_text().replace("Manager: ", "").replace(u"\xa0", u" ")
         
         #not every match has this statistic, if it doesn't just set to none type
         try:
-            metadata["{}_xg".format(team)] = float(teams[team].find("div", {"class": "score_xg"}).get_text())
+            metadata[f"{team}_xg"] = float(teams[team].find("div", {"class": "score_xg"}).get_text())
         except:
-            metadata["{}_xg".format(team)] = None
+            metadata[f"{team}_xg"] = None
 
         #if the record string doesn't match this pattern it wasn't there
         pattern = re.compile("([0-9])+-([0-9])+-([0-9])+")
-        if not pattern.search(metadata["{}_record".format(team)]):
-            metadata["{}_record".format(team)] = None
+        if not pattern.search(metadata[f"{team}_record"]):
+            metadata[f"{team}_record"] = None
         
     #get scorebox metadata if it exists
     scorebox_meta = soup.find("div", {"class": "scorebox_meta"}).find_all("small")
@@ -415,7 +415,7 @@ def get_match_date(file_path):
                 index = segments.index(segment)
                 date_segs = segments[index:index+3]
 
-    match_datetime = dt.datetime.strptime("{} {} {}".format(date_segs[0], date_segs[1], date_segs[2]), "%B %d %Y")
+    match_datetime = dt.datetime.strptime(f"{date_segs[0]} {date_segs[1]} {date_segs[2]}", "%B %d %Y")
     match_date = str(match_datetime).split(" ")[0]
 
     return str(match_date)
@@ -524,7 +524,7 @@ def get_season_files(seasons):
 
     #iterate and return all files from each year
     for year in seasons:
-        for thing in glob.glob('{}Seasons\\{}\\FBref_Match_HTMLs\\*\\*'.format(get_directory(), year)):
+        for thing in glob.glob(f"{get_directory()}Seasons\\{year}\\FBref_Match_HTMLs\\*\\*"):
             file_list.append(thing)
 
     return file_list
@@ -546,7 +546,7 @@ def get_league_files(leagues):
 
     #iterate and return all files from each year
     for league in leagues:
-        for thing in glob.glob('{}Seasons\\*\\FBref_Match_HTMLs\\{}\\*'.format(get_directory(), league)):
+        for thing in glob.glob(f"{get_directory()}Seasons\\*\\FBref_Match_HTMLs\\{league}\\*"):
             file_list.append(thing)
 
     return file_list
@@ -573,10 +573,10 @@ def append_lake_file(file_path):
             table_name = str(table)
 
         try:
-            tables[table].to_csv("{}\\Testing\\{}.csv".format(get_directory(), table_name), index=False, mode="a", header=False)
+            tables[table].to_csv(f"{get_directory()}\\Testing\\{table_name}.csv", index=False, mode="a", header=False)
         except:
             df = full_lateral_df_join(tables[table])
-            df.to_csv("{}\\Testing\\{}.csv".format(get_directory(), table_name), index=False, mode="a", header=False)
+            df.to_csv(f"{get_directory()}\\Testing\\{table_name}.csv", index=False, mode="a", header=False)
 
 
 """

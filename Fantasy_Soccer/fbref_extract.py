@@ -4,7 +4,7 @@
 # Author: Oliver DeBarros (debarros.oliver@gmail.com)
 # -----
 # Last Modified: Saturday, 22nd May 2021 12:21:58 pm
-# Modified By: Oliver DeBarros (debarros.oliver@gmail.com)
+# Modified By: Oliver DeBarros
 # -----
 # Description:
 #   This file stores all of the methods related to extracting data from fbref.com
@@ -70,7 +70,7 @@ def daily_match_extract(lookback_days=7):
     while begin_date <= yesterday:
 
         #get matches dict {League: [matches]}
-        matches = fb.get_matchday_matches("{}/en/matches/{}".format(fb.get_homepage(), begin_date))
+        matches = fb.get_matchday_matches(f"{fb.get_homepage()}/en/matches/{begin_date}")
 
         #save each match file
         for league in matches:
@@ -92,7 +92,7 @@ def ad_hoc_match_extract(dates, season):
     for date in dates:
 
         #get matches dict {League: [matches]}
-        matches = fb.get_matchday_matches("{}/en/matches/{}".format(fb.get_homepage(), date))
+        matches = fb.get_matchday_matches(f"{fb.get_homepage()}/en/matches/{date}")
 
         #save each match file
         for league in matches:
@@ -100,4 +100,4 @@ def ad_hoc_match_extract(dates, season):
                 fb.save_match_file(match, season, league)
 
 
-daily_match_extract(21)
+daily_match_extract(14)
