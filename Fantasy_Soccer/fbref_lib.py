@@ -56,7 +56,7 @@ def build_directories():
         #set to earliest year in this db history
         year = 2017
 
-        while year <= leagues[league]["current_season"]:
+        while year <= leagues[league]['current_season']:
 
             if not os.path.exists(get_directory() + f"Seasons\\{year}"):
                 os.makedirs(get_directory() + f"Seasons\\{year}")
@@ -261,7 +261,7 @@ def parse_stat_table(table):
             pass
 
         row_dict = {}
-        columns = row.find_all(["th", "td"])
+        columns = row.find_all(['th', 'td'])
 
         #iterate over columns and output to rows
         for column in columns:
@@ -274,8 +274,8 @@ def parse_stat_table(table):
 
                 #save player country link
                 elif "country" in link:
-                    row_dict["country_link"] = link
-                    row_dict["nationality"] = link.split('/')[-2]
+                    row_dict['country_link'] = link
+                    row_dict['nationality'] = link.split('/')[-2]
                     continue
 
             except Exception:
@@ -347,8 +347,8 @@ def get_match_metadata(text):
     metadata = {}
 
     #grab header metadata from webpage
-    metadata["matchweek"] = soup.find("div", {"class": "box"}).div.get_text()
-    metadata["competition_link"] = soup.find("div", {"class": "box"}).div.find("a").get("href")
+    metadata['matchweek'] = soup.find("div", {"class": "box"}).div.get_text()
+    metadata['competition_link'] = soup.find("div", {"class": "box"}).div.find("a").get("href")
     scorebox = soup.find("div", {"class": "scorebox"})
     teams = {
         "home": scorebox.div,
@@ -379,20 +379,20 @@ def get_match_metadata(text):
     scorebox_meta = soup.find("div", {"class": "scorebox_meta"}).find_all("small")
     
     #set initial values
-    metadata["attendance"] = None
-    metadata["venue"] = None
-    metadata["officials"] = None
+    metadata['attendance'] = None
+    metadata['venue'] = None
+    metadata['officials'] = None
 
     for element in scorebox_meta:
         
         if "Attendance" in element:
-            metadata["attendance"] = int(get_soup(str(scorebox_meta[scorebox_meta.index(element)+1])).get_text().replace(",",""))
+            metadata['attendance'] = int(get_soup(str(scorebox_meta[scorebox_meta.index(element)+1])).get_text().replace(",",""))
 
         if "Venue" in element:
-            metadata["venue"] = get_soup(str(scorebox_meta[scorebox_meta.index(element)+1])).get_text()
+            metadata['venue'] = get_soup(str(scorebox_meta[scorebox_meta.index(element)+1])).get_text()
 
         if "Officials" in element:
-            metadata["officials"] = get_soup(str(scorebox_meta[scorebox_meta.index(element)+1])).get_text().replace(u"\xa0", u" ").replace(" · ", ",")
+            metadata['officials'] = get_soup(str(scorebox_meta[scorebox_meta.index(element)+1])).get_text().replace(u"\xa0", u" ").replace(" · ", ",")
 
     return metadata
 
@@ -440,8 +440,8 @@ Parameters:
 def add_match_identifiers(in_dict, match_id, match_date):
     
     row = {}
-    row["match_id"] = match_id
-    row["match_date"] = match_date
+    row['match_id'] = match_id
+    row['match_date'] = match_date
     row.update(in_dict)
 
     return row
@@ -472,8 +472,8 @@ def parse_lake_match_file(file_path):
     match_meta = add_match_identifiers(get_match_metadata(text), match_id, match_date)
 
     #add dataframes to return object
-    table_dict["Lineups"] = pd.DataFrame(lineups)
-    table_dict["Match_Metadata"] = pd.DataFrame(columns=match_meta.keys()).append(match_meta, ignore_index=True)
+    table_dict['Lineups'] = pd.DataFrame(lineups)
+    table_dict['Match_Metadata'] = pd.DataFrame(columns=match_meta.keys()).append(match_meta, ignore_index=True)
 
     #iterate over all table objects
     for table in get_soup(text).find_all("table"):
@@ -501,7 +501,7 @@ def parse_lake_match_file(file_path):
     #if there is no shots table ignore the exception, also there are three
     #tables returned and we only care about the first (combined)
     try:
-        table_dict["Shots Table"] = table_dict["Shots Table"][0]
+        table_dict['Shots Table'] = table_dict['Shots Table'][0]
     except Exception:
         pass
     

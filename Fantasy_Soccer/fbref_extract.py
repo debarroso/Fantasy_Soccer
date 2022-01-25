@@ -27,7 +27,7 @@ def full_match_historical_extract():
     for league in leagues:
         
         #get the season links from the history page
-        seasons = fb.get_seasons(leagues[league]["link"])
+        seasons = fb.get_seasons(leagues[league]['link'])
         
         for season_url in seasons:
 
@@ -37,7 +37,7 @@ def full_match_historical_extract():
 
             #if there are only 6 sections, hasnt been indexed by fbref so this is the current season
             if len(fixture_url_split) == 6:
-                year = leagues[league]["current_season"]
+                year = leagues[league]['current_season']
 
             else:
                 year = int(fixture_url_split[-1].split("-")[0])
@@ -75,7 +75,7 @@ def daily_match_extract(lookback_days=7):
         #save each match file
         for league in matches:
             for match in matches[league]:
-                fb.save_match_file(match, league_dict[league]["current_season"], league)
+                fb.save_match_file(match, league_dict[league]['current_season'], league)
 
         begin_date = begin_date + dt.timedelta(days=1)
 
