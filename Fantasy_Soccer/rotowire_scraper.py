@@ -20,14 +20,14 @@ import time, os
 
 league_dict = {
     "EPL": "Premier_League",
-    #"LIGA": "La_Liga",
-    #"SERI": "Serie_A",
-    #"FRAN": "Ligue_1",
-    #"BUND": "Bundesliga",
-    #"ENG_CH": "EFL_Championship",
-    #"UCL": "Champions_League",
-    #"UEL": "Europa_League",
-    #"MLS": "Major_League_Soccer"
+    "LIGA": "La_Liga",
+    "SERI": "Serie_A",
+    "FRAN": "Ligue_1",
+    "BUND": "Bundesliga",
+    "ENG_CH": "EFL_Championship",
+    "UCL": "Champions_League",
+    "UEL": "Europa_League",
+    "MLS": "Major_League_Soccer"
 }
 
 
@@ -75,7 +75,7 @@ def download_csvs(league, player_extract):
     driver.find_element_by_css_selector("div[id='setpiece']").click()
     driver.find_element_by_css_selector("div[id='goalie']").click()
 
-    # iterate over parameters
+    # iterate over seasons and match weeks
     for year in range(2017, 2019):
         for week in range(38, 39):
             submit_play_week(year, week)
@@ -164,7 +164,7 @@ driver = webdriver.Edge(f"{fb.get_user_directory()}Documents\\msedgedriver.exe")
 login()
 
 # player data
-#[download_csvs(league, True) for league in league_dict.keys()]
+[download_csvs(league, True) for league in league_dict.keys()]
 
 # teams data
 [download_csvs(league, False) for league in league_dict.keys()]
