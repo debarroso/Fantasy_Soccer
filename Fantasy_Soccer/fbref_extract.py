@@ -1,9 +1,9 @@
 ##########################################################################################
 # File: fbref_extract.py
 # File Created: Tuesday, 23rd March 2021 6:48:13 pm
-# Author: Oliver DeBarros (debarros.oliver@gmail.com)
+# Author: Oliver DeBarros
 # -----
-# Last Modified: Saturday, 22nd May 2021 12:21:58 pm
+# Last Modified: Sunday, 6th February 2022 4:58:58 pm
 # Modified By: Oliver DeBarros
 # -----
 # Description:
@@ -16,13 +16,13 @@ import fbref_lib as fb
 
 
 """
-Performs a historical load for the selected leagues from fbref.com
-as far back as 2017 as that is when the site updated their statistics tables
+Performs a historical load for the specified league (default is all) from
+fbref.com as far back as their first season specified in the config file
 """
-def full_match_historical_extract():
+def full_match_historical_extract(league=None):
 
     #get leagues dict and iterate over keys
-    leagues = fb.get_league_dict()
+    leagues = fb.get_league_dict(league)
     
     for league in leagues:
         
@@ -32,7 +32,7 @@ def full_match_historical_extract():
         for season_url in seasons:
 
             #for some reason the history page returns stats so convert to the fixtures url
-            fixture_url = fb.stats_url_to_fixtures(season_url)
+            fixture_url = fb.stats_url_to_fixtures_url(season_url)
             fixture_url_split = fixture_url.split("/")
 
             #if there are only 6 sections, hasnt been indexed by fbref so this is the current season
@@ -42,7 +42,7 @@ def full_match_historical_extract():
             else:
                 year = int(fixture_url_split[-1].split("-")[0])
 
-            if year < 2017:
+            if year < leagues[league]['first_season']:
                 continue
 
             #gets all of the match report links from the fixtures page
@@ -100,4 +100,4 @@ def ad_hoc_match_extract(dates, season):
                 fb.save_match_file(match, season, league)
 
 
-daily_match_extract(14)
+daily_match_extract(7)
