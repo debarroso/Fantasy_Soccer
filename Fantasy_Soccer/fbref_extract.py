@@ -13,6 +13,7 @@
 
 import datetime as dt
 import fbref_lib as fb
+import time
 
 
 """
@@ -50,6 +51,7 @@ def full_match_historical_extract(league=None):
 
             #save each match request to a file
             for match in matches:
+                time.sleep(3)
                 fb.save_match_file(match, year, league)
 
 
@@ -69,12 +71,15 @@ def daily_match_extract(lookback_days=7):
     #increment begin_date by 1 in this loop until it equals yesterday
     while begin_date <= yesterday:
 
+        time.sleep(3)
+
         #get matches dict {League: [matches]}
         matches = fb.get_matchday_matches(f"{fb.get_homepage()}/en/matches/{begin_date}")
 
         #save each match file
         for league in matches:
             for match in matches[league]:
+                time.sleep(3)
                 fb.save_match_file(match, league_dict[league]['current_season'], league)
 
         begin_date = begin_date + dt.timedelta(days=1)
@@ -91,13 +96,15 @@ def ad_hoc_match_extract(dates, season):
     #iterate over dates
     for date in dates:
 
+        time.sleep(3)
+        
         #get matches dict {League: [matches]}
         matches = fb.get_matchday_matches(f"{fb.get_homepage()}/en/matches/{date}")
 
         #save each match file
         for league in matches:
             for match in matches[league]:
+                time.sleep(3)
                 fb.save_match_file(match, season, league)
 
-
-daily_match_extract(7)
+daily_match_extract()
