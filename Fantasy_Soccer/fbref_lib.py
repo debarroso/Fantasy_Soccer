@@ -1,12 +1,13 @@
 ##########################################################################################
 # File: fbref_lib.py
 # File Created: Tuesday, 23rd March 2021 6:33:29 pm
-# Author: Oliver DeBarros (debarros.oliver@gmail.com)
+# Author: Oliver DeBarros
 # -----
-# Last Modified: Saturday, 22nd May 2021 5:01:07 pm
+# Last Modified: Sunday, 6th February 2022 4:58:13 pm
 # Modified By: Oliver DeBarros
 # -----
-#  This script stores methods for returning links from passed in links
+# Description:
+#   This script stores methods for returning links from passed in links
 ##########################################################################################
 
 
@@ -20,7 +21,6 @@ from bs4 import BeautifulSoup
 Returns string of homepage for the football reference site
 """
 def get_homepage():
-
     return "https://fbref.com"
 
 
@@ -28,8 +28,14 @@ def get_homepage():
 Returns the directory of this file as a string
 """
 def get_directory():
-
     return f"{os.path.dirname(__file__)}\\"
+
+
+"""
+Returns the directory of this user
+"""
+def get_user_directory():
+    return f"{os.path.expanduser('~')}\\"
 
 
 """
@@ -54,7 +60,7 @@ def build_directories():
     for league in leagues:
 
         #set to earliest year in this db history
-        year = 2017
+        year = leagues[league]['first_season']
 
         while year <= leagues[league]['current_season']:
 
@@ -67,20 +73,18 @@ def build_directories():
             if not os.path.exists(get_directory() + f"Seasons\\{year}\\FBref_Match_HTMLs\\{league}"):
                 os.makedirs(get_directory() + f"Seasons\\{year}\\FBref_Match_HTMLs\\{league}")
 
-            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire"):
-                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire")
+            if leagues[league]['rotowire'] is True:
+                if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire"):
+                    os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire")
 
-            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}"):
-                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}")
+                if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}"):
+                    os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}")
 
-            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Players"):
-                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Players")
+                if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Players"):
+                    os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Players")
 
-            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Teams"):
-                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Teams")
-
-            if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Defense"):
-                os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Defense")
+                if not os.path.exists(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Teams"):
+                    os.makedirs(get_directory() + f"Seasons\\{year}\\Rotowire\\{league}\\Teams")
 
             year += 1
 
@@ -92,8 +96,10 @@ def build_sample_config():
         sample_dict = {
             "***Substitute with League Name Key***": {
                 "id": "***Go to https://fbref.com/en/comps/ and see what number comes next when you hover over hyperlinks***",
+                "first_season": "***First season to collect data from***",
                 "current_season": "***Beginning year of the most current season (for now updated manually)***",
-                "link": "***The competition link to the season history if you were to click on it at https://fbref.com/en/comps/***"
+                "link": "***The competition link to the season history if you were to click on it at https://fbref.com/en/comps/***",
+                "rotowire": "***Boolean to control whether or not I have rotowire data***"
             }
         }
 
@@ -113,7 +119,7 @@ def get_league_dict(league=None):
         league_dict = json.load(fp)
 
     if league:
-        return league_dict[league]
+        return {league: league_dict[league]}
     
     else:
         return league_dict
@@ -124,7 +130,7 @@ Since season history pulls stats pages, this method converts to the fixtures url
 Parameters:
     season_stats_url - url of the stats page for this league
 """
-def stats_url_to_fixtures(season_stats_url):
+def stats_url_to_fixtures_url(season_stats_url):
     
     split_url = season_stats_url.split("/")
     
@@ -201,9 +207,8 @@ def save_match_file(link, year, league):
     file_name = link.replace("/", "_")[1:] + ".txt"
 
     #write request to file
-    fp = open(f"{get_directory()}Seasons\\{year}\\FBref_Match_HTMLs\\{league}\\{file_name}", "w", encoding="utf-8")
-    fp.write(page_text)
-    fp.close()    
+    with open(f"{get_directory()}Seasons\\{year}\\FBref_Match_HTMLs\\{league}\\{file_name}", "w", encoding="utf-8") as fp:
+        fp.write(page_text)
 
 
 """
@@ -348,7 +353,9 @@ def get_match_metadata(text):
 
     #grab header metadata from webpage
     metadata['matchweek'] = soup.find("div", {"class": "box"}).div.get_text()
-    metadata['competition_link'] = soup.find("div", {"class": "box"}).div.find("a").get("href")
+    
+    # (deprecated) metadata['competition_link'] = soup.find("div", {"class": "box"}).div.find("a").get("href")
+    
     scorebox = soup.find("div", {"class": "scorebox"})
     teams = {
         "home": scorebox.div,
@@ -374,7 +381,10 @@ def get_match_metadata(text):
         pattern = re.compile("([0-9])+-([0-9])+-([0-9])+")
         if not pattern.search(metadata[f"{team}_record"]):
             metadata[f"{team}_record"] = None
-        
+    
+    #get the venue time of the match
+    metadata['venuetime'] = soup.find("div", {"class": "scorebox_meta"}).find("span", {"class": "venuetime"}).get_text().replace(" (venue time)", "")
+
     #get scorebox metadata if it exists
     scorebox_meta = soup.find("div", {"class": "scorebox_meta"}).find_all("small")
     
@@ -436,12 +446,14 @@ Parameters:
     in_dict - list of row dict objects for dataframes
     match_id - passed in match id
     match_date - passed in match date
+    season - season folder this file came from
 """
-def add_match_identifiers(in_dict, match_id, match_date):
+def add_match_identifiers(in_dict, match_id, match_date, season):
     
     row = {}
     row['match_id'] = match_id
     row['match_date'] = match_date
+    row['season'] = season
     row.update(in_dict)
 
     return row
@@ -451,25 +463,25 @@ Parses match report html file and returns dict of dataframes
 Parameters:
     file_path - file path of match report file
 """
-def parse_lake_match_file(file_path):
+def parse_lake_match_file(file_path, text):
 
     match_date = get_match_date(file_path)
     match_id = get_file_name(file_path).split("_")[2]
+    season = file_path.split("\\")[-4]
 
     #open file in the lake and remove html comments
-    fp = open(file_path, "r", encoding="utf-8")
-    text = fp.read().replace('<!--', '').replace('-->', '')
-    fp.close()
+    # with open(file_path, "r", encoding="utf-8") as fp:
+    #     text = fp.read().replace('<!--', '').replace('-->', '')
     
     table_dict = {}
 
     #iterate over rows in lineup and add match identifiers
     lineups = []
     for row in get_team_lineups(text):
-        lineups.append(add_match_identifiers(row, match_id, match_date))
+        lineups.append(add_match_identifiers(row, match_id, match_date, season))
         
     #add match identifiers to parsed data
-    match_meta = add_match_identifiers(get_match_metadata(text), match_id, match_date)
+    match_meta = add_match_identifiers(get_match_metadata(text), match_id, match_date, season)
 
     #add dataframes to return object
     table_dict['Lineups'] = pd.DataFrame(lineups)
@@ -486,7 +498,7 @@ def parse_lake_match_file(file_path):
             #iterate over rows and add match indentifiers
             data = []
             for row in parse_stat_table(table):
-                data.append(add_match_identifiers(row, match_id, match_date))
+                data.append(add_match_identifiers(row, match_id, match_date, season))
 
             df = pd.DataFrame(data)
 
@@ -509,33 +521,13 @@ def parse_lake_match_file(file_path):
 
 
 """
-Returns a list of files for whichever seasons are passed in
+Returns a list of fbref.com files for whichever league season is passed in
+If no values are passed it defaults to everything
 Parameters:
-    seasons - list of season directories to pull files from
+    leagues - league to pull data from
+    season - season to pull data from
 """
-def get_season_files(seasons):
-
-    #if something other than a list was passed in, put it in a list
-    if type(seasons) != list:
-        seasons = [seasons]
-
-    #initialize list of files for return
-    file_list = []
-
-    #iterate and return all files from each year
-    for year in seasons:
-        for thing in glob.glob(f"{get_directory()}Seasons\\{year}\\FBref_Match_HTMLs\\*\\*"):
-            file_list.append(thing)
-
-    return file_list
-
-
-"""
-Returns a list of files for whichever leagues are passed in
-Parameters:
-    leagues - list of league directories to pull files from
-"""
-def get_league_files(leagues):
+def get_fbref_files(leagues="*", season="*"):
 
     #if something other than a list was passed in, put it in a list
     if type(leagues) != list:
@@ -546,38 +538,29 @@ def get_league_files(leagues):
 
     #iterate and return all files from each year
     for league in leagues:
-        for thing in glob.glob(f"{get_directory()}Seasons\\*\\FBref_Match_HTMLs\\{league}\\*"):
+        for thing in glob.glob(f"{get_directory()}Seasons\\{season}\\FBref_Match_HTMLs\\{league}\\*"):
             file_list.append(thing)
 
     return file_list
 
 
 """
-Appends data from passed in lake file to each of the db tables
+Writes match tables from passed in dictionary to files
 Parameters:
-    file_path - file path of lake file to read
+    tables - dictionary storing table dataframes
+    mode - controls write mode of file
 """
-def append_lake_file(file_path):
+def write_tables_to_files(tables, league, schema="raw", mode="w"):
 
-    tables = parse_lake_match_file(file_path)
+    if mode == "w":
+        headers = True
+    else:
+        headers = False
     
     for table in tables:
-
-        if "Player" in str(table):
-            table_name = "Players"
-
-        elif "Goalkeeper" in str(table):
-            table_name = "Goalkeepers"
-
-        else:
-            table_name = str(table)
-
-        try:
-            tables[table].to_csv(f"{get_directory()}\\Testing\\{table_name}.csv", index=False, mode="a", header=False)
-        except Exception:
-            df = full_lateral_df_join(tables[table])
-            df.to_csv(f"{get_directory()}\\Testing\\{table_name}.csv", index=False, mode="a", header=False)
-
+        os.makedirs(f"{get_directory()}DB\\{league}\\{schema}", exist_ok=True)
+        tables[table].to_csv(f"{get_directory()}DB\\{league}\\{schema}\\{table}.csv", index=False, mode=mode, columns=tables[table].columns, header=headers)
+        
 
 """
 Joins a list of dataframes and removes duplicative columns between them
@@ -598,6 +581,7 @@ Returns a randomized subset of a list for testing
 Parameters:
     in_list - passed in list to pull from
     out_size - number of elements to return
+    seed - seed to repeat random samples
 """
 def shuffled_sample(in_list, out_size, seed=1):
     
@@ -607,3 +591,32 @@ def shuffled_sample(in_list, out_size, seed=1):
     random.Random(seed).shuffle(in_list)
 
     return in_list[:out_size]
+
+
+"""
+Converts the age string to number of days
+Parameters:
+    age_string - fbref formatted age YY-DDD
+"""
+def age_to_days(age_string):
+
+    years = age_string.split("-")[0]
+    days = age_string.split("-")[1]
+
+    return (int(years) * 365) + int(days.lstrip("0"))
+
+
+"""
+Converts officials string into json object of crew
+Parameters:
+    officials - comma delimited string of officials
+"""
+def jsonify_officiating_crew(officials):
+
+    officials_json = {}
+    officials_list = officials.split(",")
+
+    for official in officials_list:
+        officials_json[official.split("(")[1].rstrip(")")] = official.split("(")[0].rstrip()
+
+    return officials_json

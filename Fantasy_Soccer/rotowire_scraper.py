@@ -19,15 +19,15 @@ import time, os
 
 
 league_dict = {
-    "EPL": "Premier_League",
-    "LIGA": "La_Liga",
-    "SERI": "Serie_A",
-    "FRAN": "Ligue_1",
-    "BUND": "Bundesliga",
-    "ENG_CH": "EFL_Championship",
-    "UCL": "Champions_League",
-    "UEL": "Europa_League",
-    "MLS": "Major_League_Soccer"
+    # "EPL": "Premier_League",
+    # "LIGA": "La_Liga",
+    # "SERI": "Serie_A",
+    # "FRAN": "Ligue_1",
+    # "BUND": "Bundesliga",
+    # "ENG_CH": "EFL_Championship",
+    # "UCL": "Champions_League",
+    # "UEL": "Europa_League",
+    #"MLS": "Major_League_Soccer"
 }
 
 
@@ -68,6 +68,8 @@ def download_csvs(league, player_extract):
         driver.get("https://www.rotowire.com/soccer/team-stats.php")
         driver.find_element_by_css_selector(f"a[data-val='{league}']").click()
     
+    time.sleep(1)
+
     # select all elements
     driver.find_element_by_css_selector("div[id='playtime']").click()
     driver.find_element_by_css_selector("div[id='basic']").click()
@@ -76,8 +78,8 @@ def download_csvs(league, player_extract):
     driver.find_element_by_css_selector("div[id='goalie']").click()
 
     # iterate over seasons and match weeks
-    for year in range(2017, 2019):
-        for week in range(38, 39):
+    for year in range(2022, 2023):
+        for week in range(1, 20):
             submit_play_week(year, week)
             rename_file(f"{fb.get_user_directory()}Downloads\\rotowire-stats.csv", league_dict[league], year, week, player_extract)
 

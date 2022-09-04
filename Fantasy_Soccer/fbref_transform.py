@@ -25,9 +25,11 @@ Parameters:
     write_mode - mode to write the csv as
 """
 def fbref_tables(league="*", season="*", write_mode="w"):
+    
+    print(league)
 
     # get files for a particular league
-    matches = fb.get_fbref_files(league=league)
+    matches = fb.get_fbref_files(leagues=league, season=season)
     file_dict = {}
 
     # iterate over match files
@@ -70,7 +72,7 @@ def fbref_tables(league="*", season="*", write_mode="w"):
                     key = str(table).lower().replace(" ", "_")
                     df_dict[key].append(tables[table])
 
-    # depending on league some results might be empty so check then flag them
+    # depending on league some tables might be empty so check and flag them
     to_remove = []
     for key in df_dict:
         if len(df_dict[key]) == 0:
@@ -82,7 +84,7 @@ def fbref_tables(league="*", season="*", write_mode="w"):
     [df_dict.pop(key) for key in to_remove]
 
     # write to file
-    fb.write_tables_to_files(df_dict, write_mode)
+    fb.write_tables_to_files(df_dict, league, mode=write_mode)
 
 
 """
@@ -121,12 +123,14 @@ if __name__ == "__main__":
     t1 = time.perf_counter()
 
     # perform extract for each league
-    mode = "w"
-    for league in ['Bundesliga']: # , 'La_Liga', 'Ligue_1', 'Premier_League', 'Serie_A']:
-        fbref_tables(league, mode)
-        rotowire_tables("Players", league)
-        rotowire_tables("Teams", league)
+    for league in fb.get_league_dict().keys():
+
+        if league != "FA_Cup":
+            continue
+
+        fbref_tables(league=league, write_mode="w")
+        # rotowire_tables("Players", league)
+        # rotowire_tables("Teams", league)
         print(f"Execution of {league} took: {(time.perf_counter() - t1)/60} min")
 
         t1 = time.perf_counter()
-        mode = "a"
