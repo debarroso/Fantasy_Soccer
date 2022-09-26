@@ -24,7 +24,6 @@ select l.*,
        mm.away_xg,
        mm.away_manager,
        mm.away_record,
-       mm.officials,
        ts_agg.assists,
        ts_agg.pens_made,
        ts_agg.pens_att,
@@ -57,7 +56,7 @@ from match_metadata mm
          inner join
      (
          select p.match_id                   as match_id,
-                l.team                       as team,
+                l_tmp.team                   as team,
                 sum(assists)                 as assists,
                 sum(pens_made)               as pens_made,
                 sum(pens_att)                as pens_att,
@@ -80,8 +79,8 @@ from match_metadata mm
                 sum(offsides)                as offsides,
                 sum(aerials_won)             as aerials_won,
                 sum(aerials_lost)            as aerials_lost
-         from lineups l
-                  inner join players p on l.match_id = p.match_id and l.player_link = p.player_link
+         from lineups l_tmp
+                  inner join players p on l_tmp.match_id = p.match_id and l_tmp.player_link = p.player_link
          group by p.match_id, team
      ) as ts_agg on ts_agg.match_id = l.match_id and ts_agg.team = l.team
 )
