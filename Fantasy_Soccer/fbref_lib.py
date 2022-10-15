@@ -552,6 +552,9 @@ Parameters:
 """
 def write_tables_to_files(tables, league, schema="raw", mode="w"):
 
+    if league == "*":
+        league = "All"
+
     if mode == "w":
         headers = True
     else:

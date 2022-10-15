@@ -25,8 +25,6 @@ Parameters:
     write_mode - mode to write the csv as
 """
 def fbref_tables(league="*", season="*", write_mode="w"):
-    
-    print(league)
 
     # get files for a particular league
     matches = fb.get_fbref_files(leagues=league, season=season)
@@ -121,16 +119,15 @@ if __name__ == "__main__":
     
     # keep track of processing time
     t1 = time.perf_counter()
+    league = '*'
+    fbref_tables(league=league, season="2022")
+    print(f"Execution of {league} took: {(time.perf_counter() - t1)/60} min")
 
     # perform extract for each league
-    for league in fb.get_league_dict().keys():
-
-        if league != "FA_Cup":
-            continue
-
-        fbref_tables(league=league, write_mode="w")
+    # for league in fb.get_league_dict().keys():
+        
+        
         # rotowire_tables("Players", league)
         # rotowire_tables("Teams", league)
-        print(f"Execution of {league} took: {(time.perf_counter() - t1)/60} min")
-
-        t1 = time.perf_counter()
+        
+        # t1 = time.perf_counter()
