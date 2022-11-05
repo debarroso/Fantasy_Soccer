@@ -206,8 +206,15 @@ def save_match_file(link, year, league):
     page_text = requests.get(get_homepage() + link).text
     file_name = link.replace("/", "_")[1:] + ".txt"
 
-    #write request to file
+    #write request to historical file system
     with open(f"{get_directory()}Seasons\\{year}\\FBref_Match_HTMLs\\{league}\\{file_name}", "w", encoding="utf-8") as fp:
+        fp.write(page_text)
+
+    #save to landing zone
+    if not os.path.exists(f"{get_directory()}Landing\\{year}\\FBref_Match_HTMLs\\{league}"):
+        os.makedirs(f"{get_directory()}Landing\\{year}\\FBref_Match_HTMLs\\{league}")
+
+    with open(f"{get_directory()}Landing\\{year}\\FBref_Match_HTMLs\\{league}\\{file_name}", "w", encoding="utf-8") as fp:
         fp.write(page_text)
 
 
@@ -539,6 +546,30 @@ def get_fbref_files(leagues="*", season="*"):
     #iterate and return all files from each year
     for league in leagues:
         for thing in glob.glob(f"{get_directory()}Seasons\\{season}\\FBref_Match_HTMLs\\{league}\\*"):
+            file_list.append(thing)
+
+    return file_list
+
+
+"""
+Returns a list of fbref.com files from landing zone for whichever league season is passed in
+If no values are passed it defaults to everything
+Parameters:
+    leagues - league to pull data from
+    season - season to pull data from
+"""
+def get_landing_zone_files(leagues="*", season="*"):
+
+    #if something other than a list was passed in, put it in a list
+    if type(leagues) != list:
+        leagues = [leagues]
+
+    #initialize list of files for return
+    file_list = []
+
+    #iterate and return all files from each year
+    for league in leagues:
+        for thing in glob.glob(f"{get_directory()}Landing\\{season}\\FBref_Match_HTMLs\\{league}\\*"):
             file_list.append(thing)
 
     return file_list

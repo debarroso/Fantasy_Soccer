@@ -78,8 +78,6 @@ def daily_match_extract(lookback_days=7):
 
         #save each match file
         for league in matches:
-            if league in ['FA_Cup']:
-                continue
             for match in matches[league]:
                 time.sleep(3)
                 fb.save_match_file(match, league_dict[league]['current_season'], league)
