@@ -3,6 +3,9 @@ create materialized view data_models.player_shots as (
        l.match_date,
        l.team,
        l.home,
+       t.opponent,
+       t.competition,
+       t.result,
        l.formation,
        l.starter,
        l.player_link,
@@ -36,4 +39,5 @@ create materialized view data_models.player_shots as (
        p.aerials_lost
     from raw.players p
         inner join raw.lineups l on p.player_link = l.player_link and p.match_id = l.match_id
+        inner join data_models.team_agg t on l.match_id = t.match_id and l.team = t.team
 );
