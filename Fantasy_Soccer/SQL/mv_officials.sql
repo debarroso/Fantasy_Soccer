@@ -34,7 +34,7 @@ from (
                 trim(split_part(a[5], '(', 1)) as var
          from (
                   select match_id, regexp_split_to_array(officials, ',') as a
-                  from data_models.team_agg
+                  from raw.match_metadata
                   group by match_id, regexp_split_to_array(officials, ',')
               ) as t
      ) as officials_exploded on stats.match_id = officials_exploded.match_id

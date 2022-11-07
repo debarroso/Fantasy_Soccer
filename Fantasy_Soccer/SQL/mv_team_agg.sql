@@ -50,7 +50,7 @@ select l.*,
 from match_metadata mm
          inner join
      (
-         select distinct match_id, match_date, team, home
+         select distinct match_id, match_date, team, home, formation
          from lineups
      ) as l on mm.match_id = l.match_id
          inner join
