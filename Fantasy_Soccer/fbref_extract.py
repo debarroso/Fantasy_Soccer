@@ -51,7 +51,7 @@ def full_match_historical_extract(league=None):
 
             #save each match request to a file
             for match in matches:
-                time.sleep(3)
+                time.sleep(5)
                 fb.save_match_file(match, year, league)
 
 

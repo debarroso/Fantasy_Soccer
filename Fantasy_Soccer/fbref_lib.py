@@ -204,9 +204,12 @@ def save_match_file(link, year, league):
     
     #get html request and store file name
     page_text = requests.get(get_homepage() + link).text
-    file_name = link.replace("/", "_")[1:] + ".txt"
+    file_name = link.replace("/", "_")[1:] + ".html"
 
     #write request to historical file system
+    if not os.path.exists(f"{get_directory()}Seasons\\{year}\\FBref_Match_HTMLs\\{league}"):
+        os.makedirs(f"{get_directory()}Seasons\\{year}\\FBref_Match_HTMLs\\{league}")
+
     with open(f"{get_directory()}Seasons\\{year}\\FBref_Match_HTMLs\\{league}\\{file_name}", "w", encoding="utf-8") as fp:
         fp.write(page_text)
 
@@ -320,7 +323,10 @@ def get_team_lineups(text):
         
         #get team info and indicate these are starters until flipped
         team = rows[0].get_text().split("(")[0].strip()
-        formation = rows[0].get_text().split("(")[1].strip(")")
+        try:
+            formation = rows[0].get_text().split("(")[1].strip(")")
+        except:
+            formation = None
         starter = True
 
         for row in rows[1:]:
@@ -374,23 +380,38 @@ def get_match_metadata(text):
         
         metadata[f"{team}_team"] = teams[team].find("a").get_text()
         metadata[f"{team}_team_link"] = teams[team].find("a").get("href")
-        metadata[f"{team}_record"] = teams[team].find_all("div")[5].get_text()
-        metadata[f"{team}_score"] = int(teams[team].find("div", {"class": "score"}).get_text())
-        metadata[f"{team}_manager"] = teams[team].find("div", {"class": "datapoint"}).get_text().replace("Manager: ", "").replace(u"\xa0", u" ")
+
+        try:
+            metadata[f"{team}_record"] = teams[team].find_all("div")[5].get_text()
+
+            #if the record string doesn't match this pattern it wasn't there
+            pattern = re.compile("([0-9])+-([0-9])+-([0-9])+")
+            if not pattern.search(metadata[f"{team}_record"]):
+                metadata[f"{team}_record"] = None
+        except:
+            metadata[f"{team}_record"] = None
+
+        try:
+            metadata[f"{team}_score"] = int(teams[team].find("div", {"class": "score"}).get_text())
+        except:
+            metadata[f"{team}_score"] = None
+
+        try:
+            metadata[f"{team}_manager"] = teams[team].find("div", {"class": "datapoint"}).get_text().replace("Manager: ", "").replace(u"\xa0", u" ")
+        except:
+            metadata[f"{team}_manager"] = None
         
         #not every match has this statistic, if it doesn't just set to none type
         try:
             metadata[f"{team}_xg"] = float(teams[team].find("div", {"class": "score_xg"}).get_text())
         except Exception:
             metadata[f"{team}_xg"] = None
-
-        #if the record string doesn't match this pattern it wasn't there
-        pattern = re.compile("([0-9])+-([0-9])+-([0-9])+")
-        if not pattern.search(metadata[f"{team}_record"]):
-            metadata[f"{team}_record"] = None
     
     #get the venue time of the match
-    metadata['venuetime'] = soup.find("div", {"class": "scorebox_meta"}).find("span", {"class": "venuetime"}).get_text().replace(" (venue time)", "")
+    try:
+        metadata['venuetime'] = soup.find("div", {"class": "scorebox_meta"}).find("span", {"class": "venuetime"}).get_text().replace(" (venue time)", "")
+    except:
+        metadata['venuetime'] = None
 
     #get scorebox metadata if it exists
     scorebox_meta = soup.find("div", {"class": "scorebox_meta"}).find_all("small")
@@ -454,13 +475,15 @@ Parameters:
     match_id - passed in match id
     match_date - passed in match date
     season - season folder this file came from
+    competition - folder for the competition this match was played in
 """
-def add_match_identifiers(in_dict, match_id, match_date, season):
+def add_match_identifiers(in_dict, match_id, match_date, season, competition):
     
     row = {}
     row['match_id'] = match_id
     row['match_date'] = match_date
     row['season'] = season
+    row['competition'] = competition
     row.update(in_dict)
 
     return row
@@ -475,6 +498,7 @@ def parse_lake_match_file(file_path, text):
     match_date = get_match_date(file_path)
     match_id = get_file_name(file_path).split("_")[2]
     season = file_path.split("\\")[-4]
+    competition = file_path.split("\\")[-2]
 
     #open file in the lake and remove html comments
     # with open(file_path, "r", encoding="utf-8") as fp:
@@ -485,10 +509,10 @@ def parse_lake_match_file(file_path, text):
     #iterate over rows in lineup and add match identifiers
     lineups = []
     for row in get_team_lineups(text):
-        lineups.append(add_match_identifiers(row, match_id, match_date, season))
+        lineups.append(add_match_identifiers(row, match_id, match_date, season, competition))
         
     #add match identifiers to parsed data
-    match_meta = add_match_identifiers(get_match_metadata(text), match_id, match_date, season)
+    match_meta = add_match_identifiers(get_match_metadata(text), match_id, match_date, season, competition)
 
     #add dataframes to return object
     table_dict['Lineups'] = pd.DataFrame(lineups)
@@ -505,7 +529,7 @@ def parse_lake_match_file(file_path, text):
             #iterate over rows and add match indentifiers
             data = []
             for row in parse_stat_table(table):
-                data.append(add_match_identifiers(row, match_id, match_date, season))
+                data.append(add_match_identifiers(row, match_id, match_date, season, competition))
 
             df = pd.DataFrame(data)
 

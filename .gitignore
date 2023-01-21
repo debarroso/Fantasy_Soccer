@@ -1,10 +1,12 @@
 #things to ignore in this repo
-Fantasy_Soccer/fbref_links.json
+*.zip
+*.json
+*.txt
+*.log
+personal_workspace.code-workspace
 Fantasy_Soccer/__pycache__/
 Fantasy_Soccer/Seasons/
 Fantasy_Soccer/DB/
 Fantasy_Soccer/Testing/
 .vscode/
-personal_workspace.code-workspace
-DB_archive_2017-2021.zip
-Landing
+Landing/

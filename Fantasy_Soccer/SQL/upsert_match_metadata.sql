@@ -2,6 +2,7 @@ INSERT INTO raw.match_metadata (
     match_id,
     match_date,
     season,
+    competition,
     matchweek,
     home_team,
     home_team_link,
@@ -19,12 +20,13 @@ INSERT INTO raw.match_metadata (
     attendance,
     venue,
     officials
-) SELECT * FROM temp.match_metadata
+) SELECT * FROM staging.match_metadata
 ON CONFLICT ON CONSTRAINT match_metadata_pk
 DO UPDATE SET
     match_id = excluded.match_id,
     match_date = excluded.match_date,
     season = excluded.season,
+    competition = excluded.competition,
     matchweek = excluded.matchweek,
     home_team = excluded.home_team,
     home_team_link = excluded.home_team_link,

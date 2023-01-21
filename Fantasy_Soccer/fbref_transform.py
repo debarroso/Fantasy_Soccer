@@ -28,6 +28,7 @@ def fbref_tables(league="*", season="*", write_mode="w"):
 
     # get files for a particular league
     matches = fb.get_landing_zone_files(leagues=league, season=season)
+    # matches = fb.get_fbref_files(leagues=league, season=season)
     file_dict = {}
 
     # iterate over match files
@@ -47,7 +48,7 @@ def fbref_tables(league="*", season="*", write_mode="w"):
     }
 
     # spin off new processes for performance
-    with futures.ProcessPoolExecutor(max_workers=10) as executor:
+    with futures.ProcessPoolExecutor(max_workers=32) as executor:
         threads = [executor.submit(fb.parse_lake_match_file, match, file_dict[match]) for match in file_dict]
 
         # as processes complete process results
@@ -119,15 +120,17 @@ if __name__ == "__main__":
     
     # keep track of processing time
     t1 = time.perf_counter()
-    league = '*'
-    fbref_tables(league=league, season="2022")
-    print(f"Execution of {league} took: {(time.perf_counter() - t1)/60} min")
+
+    fbref_tables(league="*", season="*")
+    print(f"Execution took: {(time.perf_counter() - t1)/60} min")
 
     # perform extract for each league
     # for league in fb.get_league_dict().keys():
         
+    #     fbref_tables(league=league, season="*")
+    #     print(f"Execution of {league} took: {(time.perf_counter() - t1)/60} min")
         
-        # rotowire_tables("Players", league)
-        # rotowire_tables("Teams", league)
+    #     # rotowire_tables("Players", league)
+    #     # rotowire_tables("Teams", league)
         
-        # t1 = time.perf_counter()
+    #     t1 = time.perf_counter()

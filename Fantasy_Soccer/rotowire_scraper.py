@@ -27,7 +27,7 @@ league_dict = {
     # "ENG_CH": "EFL_Championship",
     # "UCL": "Champions_League",
     # "UEL": "Europa_League",
-    #"MLS": "Major_League_Soccer"
+    # "MLS": "Major_League_Soccer"
 }
 
 
