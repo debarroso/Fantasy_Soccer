@@ -28,7 +28,6 @@ def fbref_tables(league="*", season="*", write_mode="w"):
 
     # get files for a particular league
     matches = fb.get_landing_zone_files(leagues=league, season=season)
-    # matches = fb.get_fbref_files(leagues=league, season=season)
     file_dict = {}
 
     # iterate over match files
