@@ -1,6 +1,4 @@
-#things to ignore in this repo
 *.zip
-*.json
 *.txt
 *.log
 personal_workspace.code-workspace
