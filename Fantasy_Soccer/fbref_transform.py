@@ -84,35 +84,35 @@ def fbref_tables(league="*", season="*", write_mode="w"):
     # write to file
     fb.write_tables_to_files(df_dict, league, mode=write_mode)
 
+# deprecating
+# """
+# Iterates over Rotowire files and writes to a specified csv file
+# Parameters:
+#     file_type - (Players or Teams) schemas are slightly different so specify the file type
+#     league - league key to filter glob object
+#     season - season key to filter glob object
+#     write_mode - mode to write the csv as
+# """
+# def rotowire_tables(file_type="Players", league="*", season="*", write_mode="w"):
 
-"""
-Iterates over Rotowire files and writes to a specified csv file
-Parameters:
-    file_type - (Players or Teams) schemas are slightly different so specify the file type
-    league - league key to filter glob object
-    season - season key to filter glob object
-    write_mode - mode to write the csv as
-"""
-def rotowire_tables(file_type="Players", league="*", season="*", write_mode="w"):
+#     # list to store all dfs in
+#     df_list = []
 
-    # list to store all dfs in
-    df_list = []
-
-    # get all files and read into a df
-    for f in glob.glob(f"{fb.get_directory()}\\Seasons\\{season}\\Rotowire\\{league}\\{file_type}\\*.csv"):
+#     # get all files and read into a df
+#     for f in glob.glob(f"{fb.get_directory()}\\Seasons\\{season}\\Rotowire\\{league}\\{file_type}\\*.csv"):
         
-        df = pd.read_csv(f)
-        df.insert(0, "week_file", f.split("\\")[-1].replace("week", "").replace(".csv", ""))
-        df.insert(0, "league", f.split("\\")[-3])
-        df.insert(0, "season", f.split("\\")[-5])
-        df_list.append(df)
+#         df = pd.read_csv(f)
+#         df.insert(0, "week_file", f.split("\\")[-1].replace("week", "").replace(".csv", ""))
+#         df.insert(0, "league", f.split("\\")[-3])
+#         df.insert(0, "season", f.split("\\")[-5])
+#         df_list.append(df)
 
-    # union all dataframes and reformat column headers
-    combined = pd.concat(df_list)
-    combined.columns = [column.lower().replace(" ", "_") for column in combined.columns]
+#     # union all dataframes and reformat column headers
+#     combined = pd.concat(df_list)
+#     combined.columns = [column.lower().replace(" ", "_") for column in combined.columns]
 
-    # write combined dataframes to file
-    combined.to_csv(f"{fb.get_directory()}\\Testing\\rotowire_{league.lower()}_{file_type.lower()}.csv", index=False, mode=write_mode, columns=combined.columns, header=True)
+#     # write combined dataframes to file
+#     combined.to_csv(f"{fb.get_directory()}\\Testing\\rotowire_{league.lower()}_{file_type.lower()}.csv", index=False, mode=write_mode, columns=combined.columns, header=True)
 
 
 if __name__ == "__main__":
@@ -128,8 +128,5 @@ if __name__ == "__main__":
         
     #     fbref_tables(league=league, season="*")
     #     print(f"Execution of {league} took: {(time.perf_counter() - t1)/60} min")
-        
-    #     # rotowire_tables("Players", league)
-    #     # rotowire_tables("Teams", league)
         
     #     t1 = time.perf_counter()

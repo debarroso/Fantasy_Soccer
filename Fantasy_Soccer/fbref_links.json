@@ -3,126 +3,114 @@
         "id": 9,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/9/history/Premier-League-Seasons",
-        "rotowire": true
+        "link": "https://fbref.com/en/comps/9/history/Premier-League-Seasons"
     },
     "La_Liga": {
         "id": 12,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/12/history/La-Liga-Seasons",
-        "rotowire": true
+        "link": "https://fbref.com/en/comps/12/history/La-Liga-Seasons"
     },
     "Bundesliga": {
         "id": 20,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/20/history/Bundesliga-Seasons",
-        "rotowire": true
+        "link": "https://fbref.com/en/comps/20/history/Bundesliga-Seasons"
     },
     "Serie_A": {
         "id": 11,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/11/history/Serie-A-Seasons",
-        "rotowire": true
+        "link": "https://fbref.com/en/comps/11/history/Serie-A-Seasons"
     },
     "Ligue_1": {
         "id": 13,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/13/history/Ligue-1-Seasons",
-        "rotowire": true
+        "link": "https://fbref.com/en/comps/13/history/Ligue-1-Seasons"
     },
     "Champions_League": {
         "id": 8,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/8/history/UEFA-Champions-League-Seasons",
-        "rotowire": true
+        "link": "https://fbref.com/en/comps/8/history/UEFA-Champions-League-Seasons"
     },
     "Europa_League": {
         "id": 19,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/19/history/UEFA-Europa-League-Seasons",
-        "rotowire": true
+        "link": "https://fbref.com/en/comps/19/history/UEFA-Europa-League-Seasons"
     },
     "Europa_Conference_League": {
         "id": 882,
         "first_season": 2021,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/882/history/UEFA-Europa-Conference-League-Seasons",
-        "rotowire": false
+        "link": "https://fbref.com/en/comps/882/history/UEFA-Europa-Conference-League-Seasons"
     },
     "Major_League_Soccer": {
         "id": 22,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/22/history/Major-League-Soccer-Seasons",
-        "rotowire": true
+        "link": "https://fbref.com/en/comps/22/history/Major-League-Soccer-Seasons"
     },
     "EFL_Championship": {
         "id": 10,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/10/history/Championship-Seasons",
-        "rotowire": true
+        "link": "https://fbref.com/en/comps/10/history/Championship-Seasons"
     },
     "FA_Cup": {
         "id": 514,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/514/history/FA-Cup-Seasons",
-        "rotowire": false
+        "link": "https://fbref.com/en/comps/514/history/FA-Cup-Seasons"
     },
     "EFL_Cup": {
         "id": 690,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/690/history/EFL-Cup-Seasons",
-        "rotowire": false
+        "link": "https://fbref.com/en/comps/690/history/EFL-Cup-Seasons"
     },
     "Copa_del_Rey": {
         "id": 569,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/569/history/Copa-del-Rey-Seasons",
-        "rotowire": false
+        "link": "https://fbref.com/en/comps/569/history/Copa-del-Rey-Seasons"
     },
     "Coupe_de_France": {
         "id": 518,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/518/history/Coupe-de-France-Seasons",
-        "rotowire": false
+        "link": "https://fbref.com/en/comps/518/history/Coupe-de-France-Seasons"
     },
     "Coupe_de_la_Ligue": {
         "id": 693,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/693/history/Coupe-de-la-Ligue-Seasons",
-        "rotowire": false
+        "link": "https://fbref.com/en/comps/693/history/Coupe-de-la-Ligue-Seasons"
     },
     "DFB_Pokal": {
         "id": 521,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/521/history/DFB-Pokal-Seasons",
-        "rotowire": false
+        "link": "https://fbref.com/en/comps/521/history/DFB-Pokal-Seasons"
     },
     "Coppa_Italia": {
         "id": 529,
         "first_season": 2017,
         "current_season": 2022,
-        "link": "https://fbref.com/en/comps/529/history/Coppa-Italia-Seasons",
-        "rotowire": false
+        "link": "https://fbref.com/en/comps/529/history/Coppa-Italia-Seasons"
     },
     "Brazil_Serie_A": {
         "id": 24,
-        "first_season": 2017,
-        "current_season": 2022,
-        "link": "https://fbref.com/en/comps/24/history/Serie-A-Seasons",
-        "rotowire": false
+        "first_season": 2014,
+        "current_season": 2023,
+        "link": "https://fbref.com/en/comps/24/history/Serie-A-Seasons"
+    },
+    "Copa_Libertadores": {
+        "id": 14,
+        "first_season": 2014,
+        "current_season": 2023,
+        "link": "https://fbref.com/en/comps/14/history/Copa-Libertadores-Seasons"
     }
 }
